@@ -488,8 +488,9 @@ sub create_grafts_file {
     my $grafts_file = File::Temp->new(
         TEMPLATE => 'git-autofixup_grafts.XXXXXX',
         DIR => File::Spec->tmpdir());
+    my $merge_base = qx(git merge-base $upstream HEAD) or return "/dev/null";
     open(my $fh, '>', $grafts_file) or die "Can't open $grafts_file: $!\n";
-    print $fh $upstream, "\n";
+    print $fh $merge_base, "\n";
     close($fh) or die "Error closing grafts file: $!\n";
     return $grafts_file;
 }
